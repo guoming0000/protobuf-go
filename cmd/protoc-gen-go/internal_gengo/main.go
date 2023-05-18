@@ -31,7 +31,7 @@ import (
 var SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 
 // GenerateVersionMarkers specifies whether to generate version markers.
-var GenerateVersionMarkers = true
+var GenerateVersionMarkers = false
 
 // Standard library dependencies.
 const (
@@ -98,9 +98,12 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 	for _, message := range f.allMessages {
 		genMessage(g, f, message)
 	}
+	for _, message := range f.allMessages {
+		genMessageMethods(g, f, message)
+	}
 	genExtensions(g, f)
 
-	genReflectFileDescriptor(gen, g, f)
+	// genReflectFileDescriptor(gen, g, f)
 
 	return g
 }
@@ -334,13 +337,13 @@ func genMessage(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 
 	genMessageKnownFunctions(g, f, m)
 	genMessageDefaultDecls(g, f, m)
-	genMessageMethods(g, f, m)
+	//genMessageMethods(g, f, m)
 	genMessageOneofWrapperTypes(g, f, m)
 }
 
 func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	sf := f.allMessageFieldsByPtr[m]
-	genMessageInternalFields(g, f, m, sf)
+	// genMessageInternalFields(g, f, m, sf)
 	for _, field := range m.Fields {
 		genMessageField(g, f, m, field, sf)
 	}
@@ -403,7 +406,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		goType = "*" + goType
 	}
 	tags := structTags{
-		{"protobuf", fieldProtobufTagValue(field)},
+		// {"protobuf", fieldProtobufTagValue(field)},
 		{"json", fieldJSONTagValue(field)},
 	}
 	if field.Desc.IsMap() {
@@ -499,9 +502,9 @@ func genMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageIn
 }
 
 func genMessageMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
-	genMessageBaseMethods(g, f, m)
+	// genMessageBaseMethods(g, f, m)
 	genMessageGetterMethods(g, f, m)
-	genMessageSetterMethods(g, f, m)
+	// genMessageSetterMethods(g, f, m)
 }
 
 func genMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {

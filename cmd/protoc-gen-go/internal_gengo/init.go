@@ -113,7 +113,7 @@ type enumInfo struct {
 func newEnumInfo(f *fileInfo, enum *protogen.Enum) *enumInfo {
 	e := &enumInfo{Enum: enum}
 	e.genJSONMethod = true
-	e.genRawDescMethod = true
+	e.genRawDescMethod = false
 	return e
 }
 
@@ -129,7 +129,7 @@ type messageInfo struct {
 
 func newMessageInfo(f *fileInfo, message *protogen.Message) *messageInfo {
 	m := &messageInfo{Message: message}
-	m.genRawDescMethod = true
+	m.genRawDescMethod = false
 	m.genExtRangeMethod = true
 	m.isTracked = isTrackedMessage(m)
 	for _, field := range m.Fields {
