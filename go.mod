@@ -1,4 +1,4 @@
-module github.com/guoming0000/protobuf
+module google.golang.org/protobuf
 
 go 1.18
 
