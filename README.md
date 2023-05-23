@@ -1,3 +1,7 @@
+```bash
+go install github.com/guoming0000/protobuf-go/cmd/protoc-gen-go@latest
+```
+
 # Go support for Protocol Buffers
 
 [![Go Reference](https://pkg.go.dev/badge/google.golang.org/protobuf.svg)](https://pkg.go.dev/google.golang.org/protobuf)

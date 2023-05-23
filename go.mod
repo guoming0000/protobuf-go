@@ -1,8 +1,11 @@
-module google.golang.org/protobuf
+module github.com/guoming0000/protobuf
 
-go 1.11
+go 1.18
 
 require (
 	github.com/golang/protobuf v1.5.0
 	github.com/google/go-cmp v0.5.5
+	google.golang.org/protobuf v1.30.0
 )
+
+require golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect
