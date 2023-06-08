@@ -11,6 +11,8 @@ import (
 	"go/parser"
 	"go/token"
 	"math"
+	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
@@ -409,6 +411,12 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		// {"protobuf", fieldProtobufTagValue(field)},
 		{"json", fieldJSONTagValue(field)},
 	}
+	bindFiled := fieldBindingTagValue(field)
+	if bindFiled != "" {
+		tags = append(tags, structTags{
+			{"binding", bindFiled},
+		}...)
+	}
 	if field.Desc.IsMap() {
 		key := field.Message.Fields[0]
 		val := field.Message.Fields[1]
@@ -729,6 +737,16 @@ func fieldJSONTagValue(field *protogen.Field) string {
 	return string(field.Desc.Name()) + ",omitempty"
 }
 
+func fieldBindingTagValue(field *protogen.Field) string {
+	str := field.Comments.Trailing.String()
+	reg := regexp.MustCompile(`binding:"([^"]*)"`)
+	matches := reg.FindAllStringSubmatch(str, -1)
+	if len(matches) > 0 {
+		return matches[0][1]
+	}
+	return ""
+}
+
 func genExtensions(g *protogen.GeneratedFile, f *fileInfo) {
 	if len(f.allExtensions) == 0 {
 		return
@@ -898,5 +916,21 @@ func (c trailingComment) String() string {
 		// how to best render them in the generated code.
 		return ""
 	}
+	// 移除binding:"?"
+	s = removeTailingBindingTagValue(s)
 	return s
+}
+
+func printErr(format string, a ...any) {
+	fmt.Fprintf(os.Stderr, format, a...)
+}
+
+func removeTailingBindingTagValue(str string) string {
+	reg := regexp.MustCompile(`binding:"([^"]*)"`)
+	out := reg.ReplaceAllString(str, "")
+	trimed := strings.TrimPrefix(out, "//")
+	if strings.ReplaceAll(trimed, " ", "") == "" {
+		return ""
+	}
+	return out
 }

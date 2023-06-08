@@ -1,3 +1,4 @@
+cmd/protoc-gen-go/protoc-gen-go
 /.cache/
 /.gocache/
 /bin/
