@@ -511,7 +511,7 @@ func genMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageIn
 
 func genMessageMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	// genMessageBaseMethods(g, f, m)
-	genMessageGetterMethods(g, f, m)
+	// genMessageGetterMethods(g, f, m)
 	// genMessageSetterMethods(g, f, m)
 }
 
@@ -737,6 +737,7 @@ func fieldJSONTagValue(field *protogen.Field) string {
 	return string(field.Desc.Name()) + ",omitempty"
 }
 
+// todo 规则校验，不符合报错
 func fieldBindingTagValue(field *protogen.Field) string {
 	str := field.Comments.Trailing.String()
 	reg := regexp.MustCompile(`binding:"([^"]*)"`)
