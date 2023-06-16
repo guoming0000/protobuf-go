@@ -734,6 +734,10 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 }
 
 func fieldJSONTagValue(field *protogen.Field) string {
+	trailing := field.Comments.Trailing.String()
+	if strings.Contains(trailing, "omitempty=false") {
+		return string(field.Desc.Name())
+	}
 	return string(field.Desc.Name()) + ",omitempty"
 }
 
@@ -917,13 +921,17 @@ func (c trailingComment) String() string {
 		// how to best render them in the generated code.
 		return ""
 	}
-	// 移除binding:"?"
-	s = removeTailingBindingTagValue(s)
+	s = removeTailingOmitEmptyTagValue(s) // 移除omitempty=false
+	s = removeTailingBindingTagValue(s)   // 移除binding:"?"
 	return s
 }
 
 func printErr(format string, a ...any) {
 	fmt.Fprintf(os.Stderr, format, a...)
+}
+
+func removeTailingOmitEmptyTagValue(str string) string {
+	return strings.ReplaceAll(str, "omitempty=false", "")
 }
 
 func removeTailingBindingTagValue(str string) string {
