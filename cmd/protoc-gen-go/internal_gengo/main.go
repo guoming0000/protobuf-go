@@ -417,14 +417,14 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 			{"binding", bindFiled},
 		}...)
 	}
-	if field.Desc.IsMap() {
-		key := field.Message.Fields[0]
-		val := field.Message.Fields[1]
-		tags = append(tags, structTags{
-			{"protobuf_key", fieldProtobufTagValue(key)},
-			{"protobuf_val", fieldProtobufTagValue(val)},
-		}...)
-	}
+	//if field.Desc.IsMap() {
+	//	key := field.Message.Fields[0]
+	//	val := field.Message.Fields[1]
+	//	tags = append(tags, structTags{
+	//		{"protobuf_key", fieldProtobufTagValue(key)},
+	//		{"protobuf_val", fieldProtobufTagValue(val)},
+	//	}...)
+	//}
 	if m.isTracked {
 		tags = append(tags, gotrackTags...)
 	}
@@ -653,7 +653,6 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 	if field.Desc.IsWeak() {
 		return "struct{}", false
 	}
-
 	pointer = field.Desc.HasPresence()
 	switch field.Desc.Kind() {
 	case protoreflect.BoolKind:
@@ -678,6 +677,9 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		goType = "[]byte"
 		pointer = false // rely on nullability of slices for presence
 	case protoreflect.MessageKind, protoreflect.GroupKind:
+		if field.Desc.Message().FullName() == "google.protobuf.Any" {
+			return "interface{}", false
+		}
 		goType = "*" + g.QualifiedGoIdent(field.Message.GoIdent)
 		pointer = false // pointer captured as part of the type
 	}
