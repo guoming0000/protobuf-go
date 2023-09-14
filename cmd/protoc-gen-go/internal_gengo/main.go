@@ -737,9 +737,17 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 
 func fieldJSONTagValue(field *protogen.Field) string {
 	trailing := field.Comments.Trailing.String()
+
+	bindStr := fieldBindingTagValue(field)
+	if strings.Contains(bindStr, "required") {
+		return string(field.Desc.Name())
+	}
+
+	// 必须返回
 	if strings.Contains(trailing, "omitempty=false") {
 		return string(field.Desc.Name())
 	}
+	// 默认该参数unmarshal时，会消失
 	return string(field.Desc.Name()) + ",omitempty"
 }
 

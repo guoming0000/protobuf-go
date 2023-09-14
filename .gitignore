@@ -1,3 +1,5 @@
+.DS_Store
+cmd/protoc-gen-go/protoc-gen-go_mac13.0
 cmd/protoc-gen-go/protoc-gen-go
 /.cache/
 /.gocache/
